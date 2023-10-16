@@ -6,7 +6,7 @@ import serve from "koa-static"
 import Crawler from './crawler/crawler.js'
 import torrent from './torrent/torrent.js'
 import { Readable } from 'stream'
-const z=new Crawler("127.0.0.1:7890","https://mikanani.me")
+const crawler=new Crawler("127.0.0.1:7890","https://mikanani.me")
 const t=new torrent()
 const router = new Router();
 const app = new Koa();
@@ -15,7 +15,7 @@ var file=null
 
 router.get('/index', async(ctx, res,next) => {
 ctx.type = "json";
-ctx.body = await z.getIndexHtml();
+ctx.body = await crawler.getIndexHtml();
 })
 
 
@@ -37,6 +37,7 @@ router.get('/addMagnet', async(ctx, res,next) => {
   ctx.type = "json";
 ctx.body = JSON.stringify({"state":'ok'});
 })
+
 router.get('/streamVideo', async(ctx, res,next) => {
    let range = ctx.req.headers.range;
   let parts = range.replace(/bytes=/, "").split("-");
@@ -53,7 +54,6 @@ router.get('/streamVideo', async(ctx, res,next) => {
     };
     ctx.res.writeHead(206, head);
     try{
-    console.log('11111')
     var s=Readable.from( file.createReadStream({start,end}))
     ctx.body=s
     }catch (e){
@@ -67,14 +67,14 @@ router.get('/detailSubGroup/:detailUrl', async(ctx, res,next) => {
 const detailUrl = ctx.params.detailUrl;
 
 ctx.type = "json";
-ctx.body = JSON.stringify(await z.getDetailSubGroup(detailUrl));
+ctx.body = JSON.stringify(await crawler.getDetailSubGroup(detailUrl));
 })
 
 router.get('/detailMagnet/:bangumiId/:subGroupId', async(ctx, res,next) => {
   const bangumiId = ctx.params.bangumiId;
   const subGroupId = ctx.params.subGroupId;
   ctx.type = "json";
-  ctx.body = JSON.stringify(await z.getSubGroupMagnet(bangumiId,subGroupId,100));
+  ctx.body = JSON.stringify(await crawler.getSubGroupMagnet(bangumiId,subGroupId,100));
   })
   
 
