@@ -1,4 +1,3 @@
-
 import fs from 'fs'
 import Koa from 'koa'
 import Router from "koa-router"
@@ -6,8 +5,8 @@ import serve from "koa-static"
 import Crawler from './crawler/crawler.js'
 import torrent from './torrent/torrent.js'
 import { Readable } from 'stream'
-const crawler=new Crawler("127.0.0.1:7890","https://mikanani.me")
-const t=new torrent()
+const crawler=new Crawler("127.0.0.1:7890","https://mikanani.me");
+const t=new torrent();
 const router = new Router();
 const app = new Koa();
 var file=null
